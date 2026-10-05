@@ -4,8 +4,19 @@ import FreeTrialSection from '@/components/FreeTrialSection';
 import { Gift } from 'lucide-react';
 
 export const metadata = {
-  title: 'BrandYuga Referral Program | Earn 10% Cash Commission',
-  description: 'Refer startups and e-commerce clients to BrandYuga and earn 10% referral commission upon closing.',
+  title: 'BrandYuga Partner Referral Program | Earn 10% Cash Commission',
+  description:
+    'Refer startups and e-commerce clients to BrandYuga and earn 10% cash commission upon deal closing. Payouts sent via UPI / Bank transfer within 48 hours.',
+  alternates: {
+    canonical: 'https://brandyuga.in/referral',
+  },
+  openGraph: {
+    title: 'BrandYuga Partner Referral Program | Earn 10% Cash Payout',
+    description:
+      'Introduce businesses to BrandYuga and receive 10% of the project revenue straight to your bank or UPI.',
+    url: 'https://brandyuga.in/referral',
+    type: 'website',
+  },
 };
 
 export default function ReferralPage() {

@@ -184,3 +184,70 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(139, 92, 246, 0.6);
 }
+
+/* Hide scrollbar utility */
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Mobile Horizontal Scroll Utilities */
+.mobile-card-scroll {
+  display: flex !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  scroll-snap-type: x mandatory !important;
+  -webkit-overflow-scrolling: touch !important;
+  scroll-behavior: smooth !important;
+  -ms-overflow-style: none !important;
+  scrollbar-width: none !important;
+  margin-left: -1rem !important;
+  margin-right: -1rem !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  padding-bottom: 1rem !important;
+  padding-top: 0.25rem !important;
+}
+
+.mobile-card-scroll::-webkit-scrollbar {
+  display: none !important;
+}
+
+.mobile-card-item {
+  flex: 0 0 85vw !important;
+  max-width: 380px !important;
+  min-width: 270px !important;
+  scroll-snap-align: center !important;
+}
+
+.mobile-card-item-compact {
+  flex: 0 0 68vw !important;
+  max-width: 280px !important;
+  min-width: 200px !important;
+  scroll-snap-align: center !important;
+}
+
+@media (min-width: 768px) {
+  .mobile-card-scroll {
+    display: grid !important;
+    overflow-x: visible !important;
+    overflow-y: visible !important;
+    scroll-snap-type: none !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    padding-bottom: 0 !important;
+    padding-top: 0 !important;
+  }
+  .mobile-card-item,
+  .mobile-card-item-compact {
+    flex: initial !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    scroll-snap-align: none !important;
+  }
+}

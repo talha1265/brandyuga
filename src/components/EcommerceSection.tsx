@@ -102,11 +102,16 @@ export default function EcommerceSection() {
         </div>
 
         {/* 3 Main Marketplace Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        <div className="flex md:hidden justify-center mb-3">
+          <div className="inline-flex items-center gap-1.5 py-1 px-3 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-[11px] text-cyan-300 font-medium">
+            <span>← Swipe horizontally to explore platforms →</span>
+          </div>
+        </div>
+        <div className="mobile-card-scroll md:grid-cols-3 gap-8 mb-16">
           {platforms.map((p, idx) => (
             <div
               key={idx}
-              className={`glass-panel rounded-3xl p-7 border ${p.borderColor} relative overflow-hidden flex flex-col justify-between group hover:scale-[1.02] transition-all duration-300 shadow-xl`}
+              className={`mobile-card-item glass-panel rounded-3xl p-7 border ${p.borderColor} relative overflow-hidden flex flex-col justify-between group hover:scale-[1.02] transition-all duration-300 shadow-xl`}
             >
               <div className={`absolute top-0 right-0 w-36 h-36 bg-gradient-to-bl ${p.color} rounded-bl-full pointer-events-none opacity-40`}></div>
 
@@ -147,13 +152,18 @@ export default function EcommerceSection() {
         </div>
 
         {/* 4 Feature Pillars Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="flex md:hidden justify-center mb-3">
+          <div className="inline-flex items-center gap-1.5 py-1 px-3 rounded-full bg-purple-500/10 border border-purple-500/20 text-[11px] text-purple-300 font-medium">
+            <span>← Swipe horizontally to view capabilities →</span>
+          </div>
+        </div>
+        <div className="mobile-card-scroll md:grid-cols-2 lg:grid-cols-4 gap-6">
           {features.map((feat, idx) => {
             const Icon = feat.icon;
             return (
               <div
                 key={idx}
-                className="glass-card rounded-2xl p-6 border border-white/10 hover:border-purple-500/30 flex flex-col justify-between"
+                className="mobile-card-item-compact md:mobile-card-item glass-card rounded-2xl p-6 border border-white/10 hover:border-purple-500/30 flex flex-col justify-between"
               >
                 <div>
                   <div className={`w-12 h-12 rounded-xl ${feat.bg} flex items-center justify-center mb-4`}>

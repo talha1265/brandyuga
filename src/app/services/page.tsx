@@ -6,9 +6,19 @@ import { Sparkles, Layers, ShieldCheck, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Our Services | BrandYuga - Full-Stack E-Commerce Growth',
+  title: 'E-Commerce & Marketplace Growth Services | BrandYuga',
   description:
-    'Explore BrandYuga services: Product Research, D2C Web Stores, Photo/Video Shoots, Marketplace Scaling, PPC Ads, and Analytics.',
+    'Full-stack e-commerce capabilities: Product Research, D2C Web Stores (Next.js & Shopify), Studio Photography, Viral Video Shoots, Amazon & Flipkart Account Management, and PPC Ad Scaling.',
+  alternates: {
+    canonical: 'https://brandyuga.in/services',
+  },
+  openGraph: {
+    title: 'Comprehensive E-Commerce Services | BrandYuga',
+    description:
+      'Discover BrandYuga’s 360° growth stack: Amazon/Flipkart management, product research, high-speed D2C storefronts, and video ads.',
+    url: 'https://brandyuga.in/services',
+    type: 'website',
+  },
 };
 
 export default async function ServicesPage() {

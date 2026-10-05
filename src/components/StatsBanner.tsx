@@ -46,13 +46,18 @@ export default function StatsBanner() {
         {/* Subtle grid background */}
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:24px_24px] pointer-events-none"></div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 relative z-10">
+        <div className="flex md:hidden justify-center mb-2">
+          <div className="inline-flex items-center gap-1.5 py-0.5 px-2.5 rounded-full bg-white/[0.04] border border-white/10 text-[10px] text-purple-300 font-medium">
+            <span>← Swipe stats →</span>
+          </div>
+        </div>
+        <div className="mobile-card-scroll md:grid-cols-4 gap-4 sm:gap-6 relative z-10">
           {stats.map((stat, idx) => {
             const Icon = stat.icon;
             return (
               <div
                 key={idx}
-                className="flex flex-col items-center text-center p-4 rounded-2xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/5 hover:border-purple-500/20 transition-all group"
+                className="mobile-card-item-compact flex flex-col items-center text-center p-4 rounded-2xl bg-white/[0.02] hover:bg-white/[0.05] border border-white/5 hover:border-purple-500/20 transition-all group shrink-0"
               >
                 <div className={`w-12 h-12 rounded-xl bg-gradient-to-tr ${stat.color} p-[1px] mb-3 group-hover:scale-110 transition-transform shadow-lg`}>
                   <div className="w-full h-full bg-[#0c1022] rounded-[11px] flex items-center justify-center">

@@ -23,11 +23,16 @@ export default function ReviewsSection() {
         </div>
 
         {/* Testimonials Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="flex md:hidden justify-center mb-3">
+          <div className="inline-flex items-center gap-1.5 py-1 px-3 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-[11px] text-emerald-300 font-medium">
+            <span>← Swipe horizontally to read client reviews →</span>
+          </div>
+        </div>
+        <div className="mobile-card-scroll md:grid-cols-2 lg:grid-cols-4 gap-6">
           {initialTestimonials.map((item) => (
             <div
               key={item.id}
-              className="glass-card rounded-3xl p-6 sm:p-7 border border-white/10 hover:border-purple-500/30 flex flex-col justify-between group transition-all"
+              className="mobile-card-item glass-card rounded-3xl p-6 sm:p-7 border border-white/10 hover:border-purple-500/30 flex flex-col justify-between group transition-all"
             >
               <div>
                 {/* Top Quote & Rating */}

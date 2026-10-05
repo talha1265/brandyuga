@@ -15,9 +15,35 @@ export async function generateMetadata({ params }: Props) {
   const blog = blogs.find((b) => b.slug === slug);
   if (!blog) return { title: 'Blog Not Found | BrandYuga' };
 
+  const url = `https://brandyuga.in/blogs/${blog.slug}`;
+
   return {
-    title: `${blog.title} | BrandYuga Blog`,
+    title: blog.title,
     description: blog.excerpt,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title: blog.title,
+      description: blog.excerpt,
+      url,
+      type: 'article',
+      images: [
+        {
+          url: blog.cover_image,
+          width: 1200,
+          height: 630,
+          alt: blog.title,
+        },
+      ],
+      authors: [blog.author],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: blog.title,
+      description: blog.excerpt,
+      images: [blog.cover_image],
+    },
   };
 }
 
@@ -30,8 +56,36 @@ export default async function BlogPostPage({ params }: Props) {
     notFound();
   }
 
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: blog.title,
+    description: blog.excerpt,
+    image: blog.cover_image,
+    author: {
+      '@type': 'Person',
+      name: blog.author,
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'BrandYuga',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://brandyuga.in/assets/images/logo.png',
+      },
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': `https://brandyuga.in/blogs/${blog.slug}`,
+    },
+  };
+
   return (
     <article className="pt-28 pb-24 max-w-4xl mx-auto px-4 sm:px-6">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }}
+      />
       {/* Back button */}
       <Link
         href="/blogs"

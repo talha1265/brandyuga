@@ -98,14 +98,19 @@ export default function ServicesSection({ services }: Props) {
         </div>
 
         {/* Services Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="flex md:hidden justify-center mb-3">
+          <div className="inline-flex items-center gap-1.5 py-1 px-3 rounded-full bg-purple-500/10 border border-purple-500/20 text-[11px] text-purple-300 font-medium">
+            <span>← Swipe horizontally to see all services →</span>
+          </div>
+        </div>
+        <div className="mobile-card-scroll md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredServices.map((service) => {
             const icon = iconMap[service.icon] || <Sparkles className="w-6 h-6 text-purple-400" />;
 
             return (
               <div
                 key={service.id}
-                className="glass-card rounded-2xl p-6 sm:p-7 flex flex-col justify-between border border-white/10 hover:border-purple-500/40 relative group overflow-hidden"
+                className="mobile-card-item glass-card rounded-2xl p-6 sm:p-7 flex flex-col justify-between border border-white/10 hover:border-purple-500/40 relative group overflow-hidden"
               >
                 {/* Top Glowing Gradient Accent */}
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-cyan-400 to-indigo-500 opacity-60 group-hover:opacity-100 transition-opacity"></div>

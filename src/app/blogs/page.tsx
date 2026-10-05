@@ -5,8 +5,19 @@ import Image from 'next/image';
 import { BookOpen, Clock, User, ArrowRight, Sparkles } from 'lucide-react';
 
 export const metadata = {
-  title: 'E-Commerce Scaling Blog & Insights | BrandYuga',
-  description: 'Actionable strategies on product research, Amazon scaling, video ads, and profit analytics.',
+  title: 'E-Commerce Scaling Blog & Playbooks | BrandYuga',
+  description:
+    'Actionable frameworks and tactical strategies on winning product research, Amazon BSR ranking, D2C viral video ads, and profit analytics.',
+  alternates: {
+    canonical: 'https://brandyuga.in/blogs',
+  },
+  openGraph: {
+    title: 'E-Commerce Scaling Blog & Playbooks | BrandYuga',
+    description:
+      'Proven frameworks and playbooks for scaling Indian consumer brands online across Amazon, Flipkart, and D2C.',
+    url: 'https://brandyuga.in/blogs',
+    type: 'website',
+  },
 };
 
 export default async function BlogsPage() {
@@ -31,11 +42,16 @@ export default async function BlogsPage() {
       </section>
 
       {/* Blog Cards Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="flex md:hidden justify-center mb-3">
+        <div className="inline-flex items-center gap-1.5 py-1 px-3 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-[11px] text-cyan-300 font-medium">
+          <span>← Swipe horizontally to browse articles →</span>
+        </div>
+      </div>
+      <div className="mobile-card-scroll md:grid-cols-3 gap-8">
         {blogs.map((blog) => (
           <article
             key={blog.id}
-            className="glass-card rounded-3xl overflow-hidden border border-white/10 hover:border-purple-500/40 flex flex-col justify-between group transition-all"
+            className="mobile-card-item glass-card rounded-3xl overflow-hidden border border-white/10 hover:border-purple-500/40 flex flex-col justify-between group transition-all"
           >
             <div>
               {/* Cover Image */}

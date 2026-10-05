@@ -4,8 +4,19 @@ import FreeTrialSection from '@/components/FreeTrialSection';
 import { MessageSquare } from 'lucide-react';
 
 export const metadata = {
-  title: 'Contact Us | BrandYuga - Brand & Business Growth',
-  description: 'Have a project in mind? Contact the BrandYuga strategy desk via WhatsApp, Phone or direct consultation form.',
+  title: 'Contact Strategy Desk & Free Consultation | BrandYuga',
+  description:
+    'Have a project in mind or want to scale your Amazon, Flipkart or D2C brand? Contact the BrandYuga strategy desk via WhatsApp (+91 88530 66278), Phone or direct inquiry form.',
+  alternates: {
+    canonical: 'https://brandyuga.in/contact',
+  },
+  openGraph: {
+    title: 'Contact Strategy Desk | BrandYuga',
+    description:
+      'Book an exploratory growth call with our senior account directors to audit your listings, D2C funnel, or ad campaigns.',
+    url: 'https://brandyuga.in/contact',
+    type: 'website',
+  },
 };
 
 export default function ContactPage() {

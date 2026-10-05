@@ -71,8 +71,13 @@ export default function GrowthCalculator() {
           </div>
 
           {/* Result Cards Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-            <div className="p-5 rounded-2xl bg-white/[0.03] border border-white/10 text-center">
+          <div className="flex md:hidden justify-center mb-2">
+            <div className="inline-flex items-center gap-1.5 py-0.5 px-2.5 rounded-full bg-white/[0.04] border border-white/10 text-[10px] text-amber-300 font-medium">
+              <span>← Swipe projection cards →</span>
+            </div>
+          </div>
+          <div className="mobile-card-scroll md:grid-cols-3 gap-4 mb-8">
+            <div className="mobile-card-item p-5 rounded-2xl bg-white/[0.03] border border-white/10 text-center flex flex-col justify-center">
               <div className="text-xs text-slate-400 mb-1">Projected Marketplace Revenue</div>
               <div className="text-xl sm:text-2xl font-bold text-amber-400">
                 {formatINR(projectedMarketplace)}
@@ -80,7 +85,7 @@ export default function GrowthCalculator() {
               <div className="text-[11px] text-slate-400 mt-1">Amazon + Flipkart Optimization</div>
             </div>
 
-            <div className="p-5 rounded-2xl bg-white/[0.03] border border-white/10 text-center">
+            <div className="mobile-card-item p-5 rounded-2xl bg-white/[0.03] border border-white/10 text-center flex flex-col justify-center">
               <div className="text-xs text-slate-400 mb-1">Projected D2C Web Revenue</div>
               <div className="text-xl sm:text-2xl font-bold text-cyan-400">
                 {formatINR(projectedD2C)}
@@ -88,7 +93,7 @@ export default function GrowthCalculator() {
               <div className="text-[11px] text-slate-400 mt-1">Direct Brand Storefront</div>
             </div>
 
-            <div className="p-5 rounded-2xl bg-gradient-to-tr from-purple-900/40 to-indigo-900/40 border border-purple-500/40 text-center relative overflow-hidden">
+            <div className="mobile-card-item p-5 rounded-2xl bg-gradient-to-tr from-purple-900/40 to-indigo-900/40 border border-purple-500/40 text-center relative overflow-hidden flex flex-col justify-center">
               <div className="text-xs text-purple-300 font-semibold mb-1">Total Monthly Sales Target</div>
               <div className="text-2xl sm:text-3xl font-black text-white">
                 {formatINR(totalProjected)}

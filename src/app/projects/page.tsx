@@ -5,8 +5,19 @@ import FreeTrialSection from '@/components/FreeTrialSection';
 import { Sparkles } from 'lucide-react';
 
 export const metadata = {
-  title: 'Client Projects & Portfolio | BrandYuga',
-  description: 'Explore selected projects delivered by BrandYuga: Dezignxo, Jettel, Gadgets Zone, and more.',
+  title: 'Client Projects & Portfolio Case Studies | BrandYuga',
+  description:
+    'Explore selected digital platforms and high-converting e-commerce case studies delivered by BrandYuga: Dezignxo, Jettel, Gadgets Zone, and more.',
+  alternates: {
+    canonical: 'https://brandyuga.in/projects',
+  },
+  openGraph: {
+    title: 'Client Projects & Portfolio Case Studies | BrandYuga',
+    description:
+      'Explore successful digital storefronts and marketplaces engineered by BrandYuga.',
+    url: 'https://brandyuga.in/projects',
+    type: 'website',
+  },
 };
 
 export default async function ProjectsPage() {

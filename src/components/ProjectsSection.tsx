@@ -63,11 +63,16 @@ export default function ProjectsSection({ projects }: Props) {
         </div>
 
         {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+        <div className="flex md:hidden justify-center mb-3">
+          <div className="inline-flex items-center gap-1.5 py-1 px-3 rounded-full bg-purple-500/10 border border-purple-500/20 text-[11px] text-purple-300 font-medium">
+            <span>← Swipe horizontally to see case studies →</span>
+          </div>
+        </div>
+        <div className="mobile-card-scroll md:grid-cols-2 lg:grid-cols-3 gap-7">
           {filteredProjects.map((project) => (
             <div
               key={project.id}
-              className="glass-card rounded-3xl overflow-hidden border border-white/10 hover:border-purple-500/40 flex flex-col justify-between group transition-all duration-300"
+              className="mobile-card-item glass-card rounded-3xl overflow-hidden border border-white/10 hover:border-purple-500/40 flex flex-col justify-between group transition-all duration-300"
             >
               {/* Image Container with Zoom effect */}
               <div className="relative aspect-[16/10] w-full bg-[#0a0f24] overflow-hidden border-b border-white/10">

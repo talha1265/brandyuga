@@ -7,6 +7,7 @@ import FreeTrialSection from '@/components/FreeTrialSection';
 import ProjectsSection from '@/components/ProjectsSection';
 import ReviewsSection from '@/components/ReviewsSection';
 import ReferralSection from '@/components/ReferralSection';
+import FaqSection from '@/components/FaqSection';
 import ContactSection from '@/components/ContactSection';
 import { getServices, getProjects } from '@/lib/db';
 
@@ -27,6 +28,7 @@ export default async function HomePage() {
       <ProjectsSection projects={projects} />
       <ReviewsSection />
       <ReferralSection />
+      <FaqSection />
       <ContactSection />
     </div>
   );
