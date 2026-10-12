@@ -24,7 +24,7 @@ export function getPayUConfig() {
     process.env.PAYU_MODE === 'prod' || process.env.PAYU_MODE === 'live' ? 'live' : 'test';
   // Use user's key/salt if provided; otherwise fallback to PayU standard official test credentials
   const key = process.env.PAYU_MERCHANT_KEY || 'gtKFFx';
-  const salt = process.env.PAYU_MERCHANT_SALT || 'eCwWELxi';
+  const salt = process.env.PAYU_MERCHANT_SALT || '4R38IvwiV57FwVpsgOvTXBdLE4tHUXFW';
   const actionUrl =
     mode === 'live'
       ? 'https://secure.payu.in/_payment'
