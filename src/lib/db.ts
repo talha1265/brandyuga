@@ -1,6 +1,6 @@
 import { Pool } from '@neondatabase/serverless';
 import { initialServices, initialProjects, initialBlogs } from './initialData';
-import { Lead, ServiceItem, ProjectItem, BlogPost, AdminStats } from '@/types';
+import { Lead, ServiceItem, ProjectItem, BlogPost, AdminStats, SubscriptionOrder } from '@/types';
 import fs from 'fs';
 import path from 'path';
 
@@ -30,6 +30,7 @@ interface LocalStore {
   services: ServiceItem[];
   projects: ProjectItem[];
   blogs: BlogPost[];
+  subscriptions?: SubscriptionOrder[];
 }
 
 function getLocalStore(): LocalStore {
@@ -39,7 +40,11 @@ function getLocalStore(): LocalStore {
     }
     if (fs.existsSync(DATA_FILE)) {
       const content = fs.readFileSync(DATA_FILE, 'utf-8');
-      return JSON.parse(content);
+      const parsed = JSON.parse(content);
+      if (!parsed.subscriptions) {
+        parsed.subscriptions = [];
+      }
+      return parsed;
     }
   } catch (e) {
     console.error('Error reading local store:', e);
@@ -76,6 +81,7 @@ function getLocalStore(): LocalStore {
     services: initialServices,
     projects: initialProjects,
     blogs: initialBlogs,
+    subscriptions: [],
   };
 
   saveLocalStore(defaultStore);
@@ -153,6 +159,27 @@ async function initNeonTables() {
         read_time VARCHAR(32),
         published BOOLEAN DEFAULT TRUE,
         created_at VARCHAR(64)
+      );
+
+      CREATE TABLE IF NOT EXISTS subscriptions (
+        id VARCHAR(64) PRIMARY KEY,
+        txnid VARCHAR(128) UNIQUE NOT NULL,
+        plan_id VARCHAR(64) NOT NULL,
+        plan_name VARCHAR(255) NOT NULL,
+        platforms JSONB,
+        duration_months INT DEFAULT 3,
+        amount NUMERIC(10, 2) NOT NULL,
+        currency VARCHAR(10) DEFAULT 'INR',
+        customer_name VARCHAR(255) NOT NULL,
+        customer_email VARCHAR(255) NOT NULL,
+        customer_phone VARCHAR(64) NOT NULL,
+        brand_name VARCHAR(255),
+        gst_number VARCHAR(64),
+        status VARCHAR(32) DEFAULT 'initiated',
+        payu_payment_id VARCHAR(128),
+        payu_mode VARCHAR(32),
+        payment_date TIMESTAMP WITH TIME ZONE,
+        created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
       );
     `);
 
@@ -540,11 +567,182 @@ export async function toggleBlogPublish(id: string): Promise<boolean> {
   return true;
 }
 
+// ----------------- SUBSCRIPTIONS API -----------------
+export async function getSubscriptions(): Promise<SubscriptionOrder[]> {
+  if (neonPool) {
+    try {
+      await initNeonTables();
+      const res = await neonPool.query('SELECT * FROM subscriptions ORDER BY created_at DESC');
+      if (res.rows.length > 0) {
+        return res.rows.map(r => ({
+          id: r.id,
+          txnid: r.txnid,
+          planId: r.plan_id,
+          planName: r.plan_name,
+          platforms: typeof r.platforms === 'string' ? JSON.parse(r.platforms) : r.platforms || [],
+          durationMonths: r.duration_months,
+          amount: parseFloat(r.amount),
+          currency: r.currency || 'INR',
+          customerName: r.customer_name,
+          customerEmail: r.customer_email,
+          customerPhone: r.customer_phone,
+          brandName: r.brand_name || '',
+          gstNumber: r.gst_number || '',
+          status: r.status,
+          payuPaymentId: r.payu_payment_id || undefined,
+          payuMode: r.payu_mode || undefined,
+          paymentDate: r.payment_date ? new Date(r.payment_date).toISOString() : undefined,
+          created_at: r.created_at ? new Date(r.created_at).toISOString() : new Date().toISOString(),
+        }));
+      }
+    } catch (e) {
+      console.error('Neon getSubscriptions failed:', e);
+    }
+  }
+
+  const store = getLocalStore();
+  return (store.subscriptions || []).sort(
+    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  );
+}
+
+export async function getSubscriptionByTxnId(txnid: string): Promise<SubscriptionOrder | null> {
+  if (neonPool) {
+    try {
+      await initNeonTables();
+      const res = await neonPool.query('SELECT * FROM subscriptions WHERE txnid = $1 LIMIT 1', [txnid]);
+      if (res.rows.length > 0) {
+        const r = res.rows[0];
+        return {
+          id: r.id,
+          txnid: r.txnid,
+          planId: r.plan_id,
+          planName: r.plan_name,
+          platforms: typeof r.platforms === 'string' ? JSON.parse(r.platforms) : r.platforms || [],
+          durationMonths: r.duration_months,
+          amount: parseFloat(r.amount),
+          currency: r.currency || 'INR',
+          customerName: r.customer_name,
+          customerEmail: r.customer_email,
+          customerPhone: r.customer_phone,
+          brandName: r.brand_name || '',
+          gstNumber: r.gst_number || '',
+          status: r.status,
+          payuPaymentId: r.payu_payment_id || undefined,
+          payuMode: r.payu_mode || undefined,
+          paymentDate: r.payment_date ? new Date(r.payment_date).toISOString() : undefined,
+          created_at: r.created_at ? new Date(r.created_at).toISOString() : new Date().toISOString(),
+        };
+      }
+    } catch (e) {
+      console.error('Neon getSubscriptionByTxnId failed:', e);
+    }
+  }
+
+  const store = getLocalStore();
+  const sub = (store.subscriptions || []).find(s => s.txnid === txnid);
+  return sub || null;
+}
+
+export async function createSubscription(orderData: Omit<SubscriptionOrder, 'id' | 'created_at'>): Promise<SubscriptionOrder> {
+  const newOrder: SubscriptionOrder = {
+    ...orderData,
+    id: 'sub-' + Date.now() + '-' + Math.random().toString(36).substring(2, 6),
+    created_at: new Date().toISOString(),
+  };
+
+  if (neonPool) {
+    try {
+      await initNeonTables();
+      await neonPool.query(
+        `INSERT INTO subscriptions (
+          id, txnid, plan_id, plan_name, platforms, duration_months, amount, currency,
+          customer_name, customer_email, customer_phone, brand_name, gst_number,
+          status, payu_payment_id, payu_mode, payment_date, created_at
+        ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18)`,
+        [
+          newOrder.id,
+          newOrder.txnid,
+          newOrder.planId,
+          newOrder.planName,
+          JSON.stringify(newOrder.platforms),
+          newOrder.durationMonths,
+          newOrder.amount,
+          newOrder.currency,
+          newOrder.customerName,
+          newOrder.customerEmail,
+          newOrder.customerPhone,
+          newOrder.brandName || null,
+          newOrder.gstNumber || null,
+          newOrder.status,
+          newOrder.payuPaymentId || null,
+          newOrder.payuMode || null,
+          newOrder.paymentDate ? new Date(newOrder.paymentDate) : null,
+          newOrder.created_at,
+        ]
+      );
+      return newOrder;
+    } catch (e) {
+      console.error('Failed to insert subscription into Neon, saving to local store:', e);
+    }
+  }
+
+  const store = getLocalStore();
+  if (!store.subscriptions) {
+    store.subscriptions = [];
+  }
+  store.subscriptions.unshift(newOrder);
+  saveLocalStore(store);
+  return newOrder;
+}
+
+export async function updateSubscriptionStatus(
+  txnid: string,
+  status: SubscriptionOrder['status'],
+  payuPaymentId?: string,
+  payuMode?: 'test' | 'live' | 'simulated'
+): Promise<boolean> {
+  const now = new Date().toISOString();
+
+  if (neonPool) {
+    try {
+      await initNeonTables();
+      await neonPool.query(
+        `UPDATE subscriptions
+         SET status = $1, payu_payment_id = COALESCE($2, payu_payment_id), payu_mode = COALESCE($3, payu_mode),
+             payment_date = CASE WHEN $1 = 'success' THEN CURRENT_TIMESTAMP ELSE payment_date END
+         WHERE txnid = $4`,
+        [status, payuPaymentId || null, payuMode || null, txnid]
+      );
+      return true;
+    } catch (e) {
+      console.error('Neon updateSubscriptionStatus failed:', e);
+    }
+  }
+
+  const store = getLocalStore();
+  if (!store.subscriptions) store.subscriptions = [];
+  const index = store.subscriptions.findIndex(s => s.txnid === txnid);
+  if (index !== -1) {
+    store.subscriptions[index].status = status;
+    if (payuPaymentId) store.subscriptions[index].payuPaymentId = payuPaymentId;
+    if (payuMode) store.subscriptions[index].payuMode = payuMode;
+    if (status === 'success') store.subscriptions[index].paymentDate = now;
+    saveLocalStore(store);
+    return true;
+  }
+  return false;
+}
+
 // ----------------- ADMIN STATS -----------------
 export async function getAdminStats(): Promise<AdminStats> {
   const leads = await getLeads();
   const services = await getServices();
   const projects = await getProjects();
+  const subscriptions = await getSubscriptions();
+
+  const successSubs = subscriptions.filter(s => s.status === 'success');
+  const totalRevenue = successSubs.reduce((acc, curr) => acc + (curr.amount || 0), 0);
 
   return {
     totalLeads: leads.length,
@@ -554,6 +752,8 @@ export async function getAdminStats(): Promise<AdminStats> {
     contactMessages: leads.filter(l => l.type === 'contact').length,
     totalProjects: projects.length,
     totalServices: services.length,
+    totalSubscriptions: subscriptions.length,
+    totalRevenue,
   };
 }
 

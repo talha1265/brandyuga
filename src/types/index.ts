@@ -61,4 +61,43 @@ export interface AdminStats {
   contactMessages: number;
   totalProjects: number;
   totalServices: number;
+  totalSubscriptions?: number;
+  totalRevenue?: number;
 }
+
+export type SubscriptionPlanId = 'marketplace_duo_3m' | 'marketplace_trio_3m';
+
+export interface SubscriptionPlan {
+  id: SubscriptionPlanId;
+  name: string;
+  badge?: string;
+  tagline: string;
+  durationMonths: number;
+  price: number; // in INR
+  originalPrice?: number;
+  platforms: string[]; // e.g. ['Flipkart', 'Amazon'] or ['Flipkart', 'Amazon', 'Meesho']
+  features: string[];
+  recommended?: boolean;
+}
+
+export interface SubscriptionOrder {
+  id: string;
+  txnid: string;
+  planId: SubscriptionPlanId;
+  planName: string;
+  platforms: string[];
+  durationMonths: number;
+  amount: number;
+  currency: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  brandName?: string;
+  gstNumber?: string;
+  status: 'initiated' | 'pending' | 'success' | 'failed' | 'cancelled';
+  payuPaymentId?: string;
+  payuMode?: 'test' | 'live' | 'simulated';
+  paymentDate?: string;
+  created_at: string;
+}
+

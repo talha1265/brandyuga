@@ -17,7 +17,8 @@ import {
   BookOpen,
   Gift,
   Mail,
-  Phone
+  Phone,
+  CreditCard
 } from 'lucide-react';
 
 export default function Navbar() {
@@ -53,6 +54,7 @@ export default function Navbar() {
   const navLinks = [
     { name: 'Home', href: '/', icon: Home },
     { name: 'Services', href: '/services', icon: Layers },
+    { name: 'Plans', href: '/subscription', icon: CreditCard },
     { name: 'Projects', href: '/projects', icon: Briefcase },
     { name: 'Blogs', href: '/blogs', icon: BookOpen },
     { name: 'Referral', href: '/referral', icon: Gift },
